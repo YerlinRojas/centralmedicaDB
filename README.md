@@ -46,3 +46,8 @@ Nuestro equipo de desarrollo está inmerso en la creación de un sistema de gest
 
 ## Objetivo
 El objetivo principal es crear una base de datos que permita a un centro médico gestionar de manera efectiva la información de pacientes, médicos, citas, historias médicas y terapias. Esta base de datos debe ser fácil de mantener, escalable y garantizar la integridad de los datos, permitiendo así una gestión ágil y precisa de todas las operaciones médicas.
+
+
+## Diagrama Entidad Relación
+
+![diagrama entidad relacion](../centralmedicaDB/public/images/DiagramaEntidadRelacion.png)
