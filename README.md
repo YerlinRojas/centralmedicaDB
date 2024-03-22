@@ -50,4 +50,4 @@ El objetivo principal es crear una base de datos que permita a un centro médico
 
 ## Diagrama Entidad Relación
 
-![diagrama entidad relacion](../public/images/DiagramaEntidadRelacion.png)
+![diagrama entidad relacion](./public/images/DiagramaEntidadRelacion.png)
