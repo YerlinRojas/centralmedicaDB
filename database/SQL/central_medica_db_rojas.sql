@@ -146,7 +146,8 @@ REFERENCES medical_history(id_history);
 
 -- INSERT
 
-INSERT INTO patients(id_patient,
+/*INSERT INTO patients(
+	id_patient,
     first_name,
     last_name,
     email,
@@ -193,7 +194,7 @@ VALUES
 (3, 'Lorine', 'MacGettigen', 'lmacgettigen2@creativecommons.org', 'psychologist', '730-195-5586', 3),
 (4, 'Radcliffe', 'Willshere', 'rwillshere3@xing.com', 'psychologist','757-848-1622', 4),
 (5, 'Patsy', 'Surgison', 'psurgison4@angelfire.com','pulmonologist', '613-984-3535', 5),
-(6, 'Ardath', 'Fernandes', 'afernandes5@freewebs.com','psychologist', '922-820-8737', 6);
+(6, 'Ardath', 'Fernandes', 'afernandes5@freewebs.com','psychologist', '922-820-8737', 6);*/
 
 
 INSERT INTO appointments(
@@ -251,6 +252,9 @@ INSERT INTO therapy(
     obs
 )
 VALUES
-(1, 1, '2024-03-25', 'Detalles de la sesión', 'Progreso de la sesión', 'Observaciones de la sesión');
-
+(1, 1, '2024-03-25', 'Detalles de la sesión', 'Progreso de la sesión', 'Observaciones de la sesión'),
+(2, 1, '2024-03-26', 'Detalles de la sesión', 'Progreso de la sesión', 'Observaciones de la sesión'),
+(1, 1, '2024-04-02', 'Detalles de la sesión', 'Progreso de la sesión', 'Observaciones de la sesión'),
+(3, 5, '2024-04-02', 'Detalles de la sesión', 'Progreso de la sesión', 'Observaciones de la sesión'),
+(3, 5, '2024-04-15', 'Detalles de la sesión', 'Progreso de la sesión', 'Observaciones de la sesión');
 
