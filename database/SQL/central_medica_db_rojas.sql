@@ -258,3 +258,37 @@ VALUES
 (3, 5, '2024-04-02', 'Detalles de la sesión', 'Progreso de la sesión', 'Observaciones de la sesión'),
 (3, 5, '2024-04-15', 'Detalles de la sesión', 'Progreso de la sesión', 'Observaciones de la sesión');
 
+
+
+-- VIEWS
+-- vISTAS CITAS POR ESTADO
+CREATE VIEW citas_por_estado AS
+SELECT status, COUNT(*) AS cantidad_citas
+FROM appointments
+GROUP BY status;
+
+-- vISTA HISTORIAL MEDICO POR PACIENTE
+CREATE VIEW historial_medico_por_paciente AS
+SELECT p.first_name, p.last_name, mh.details, mh.diagnosis, mh.treatment
+FROM patients p
+JOIN medical_history mh ON p.id_patient = mh.id_patient;
+
+-- VISTA SE SESIONES MEDICO TERAPIA POR PACIENTE
+CREATE VIEW sesiones_terapia_por_paciente AS
+SELECT p.first_name, p.last_name, t.details, t.progress, t.obs
+FROM patients p
+JOIN therapy t ON p.id_patient = t.id_patient;
+
+-- VISTA DISPONIBILIDAD DE DOCTORES
+CREATE VIEW disponibilidad_doctores AS
+SELECT d.first_name, d.last_name, ad.availability_date, ad.availability_time_from, ad.availability_time_to
+FROM doctors d
+JOIN availabilityDate ad ON d.id_doctor = ad.id_doctor;
+
+-- VISTA FRECUENCIA DE DIAGNOSTICOS
+CREATE VIEW frecuencia_diagnosticos AS
+SELECT d.speciality, mh.diagnosis, COUNT(*) AS cantidad_diagnosticos
+FROM doctors d
+JOIN medical_history mh ON d.id_doctor = mh.id_doctor
+GROUP BY d.speciality, mh.diagnosis;
+
