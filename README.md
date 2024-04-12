@@ -24,25 +24,118 @@ Nuestro equipo de desarrollo está inmerso en la creación de un sistema de gest
 ## Entidades Principales
 
 1. **Pacientes:**
-    Cada paciente tiene un ID único, nombre, apellido, fecha de nacimiento, género, dirección y número de teléfono.
+    Cada paciente tiene un: 
+    IDúnico: number,
+    nombre: string, 
+    apellido: string, 
+    fecha de nacimiento: date, 
+    género: string, 
+    dirección: string, 
+    número de teléfono: number.
+        **TABLA**
+        patients(
+        id_patient INT AUTO_INCREMENT PRIMARY KEY,
+        first_name VARCHAR(100) NOT NULL,
+        last_name VARCHAR(100) NOT NULL,
+        email VARCHAR(100) UNIQUE NOT NULL,
+        birth DATE,
+        gender VARCHAR(10),
+        address VARCHAR(255),
+        phone VARCHAR(20))
 
 2. **Médicos:**
-    Cada médico tiene un ID único, nombre, apellido, especialidad, número de teléfono y la sala en la que consulta.
+    Cada médico tiene un:
+    IDúnico: number, 
+    nombre: string, 
+    apellido: string, 
+    especialidad: string, 
+    número de teléfono: number,
+    sala en la que consulta: number.
+        **TABLA**
+        doctors(
+        id_doctor INT AUTO_INCREMENT PRIMARY KEY,
+        first_name VARCHAR(100) NOT NULL,
+        last_name VARCHAR(100) NOT NULL,
+        email VARCHAR(100) UNIQUE NOT NULL,
+        speciality VARCHAR(100),
+        phone VARCHAR(20),
+        room VARCHAR(100))
 
 3. **Citas:**
-    Las citas están asociadas a un paciente y un médico específicos.
-    Incluyen la fecha y hora de la cita.
+    Las citas están asociadas: 
+    IDunico: number,
+    IDpaciente : number, 
+    IDmédico específicos : number, 
+    fecha de la cita: date, 
+    hora de la cita: date.
+        **TABLA**
+        appointments(
+        id_appointment INT AUTO_INCREMENT PRIMARY KEY,
+        id_patient INT,
+        id_doctor INT,
+        appointment_date DATE NOT NULL,
+        appointment_time TIME NOT NULL,
+        status ENUM('Pending', 'Confirmed', 'Cancelled', 'Completed') DEFAULT 'Pending')
     
 4. **Disponibilidad de Médicos:**
     Registra la disponibilidad de los médicos para citas.
-    Incluye la fecha, hora, estado (ocupado/disponible) y comentarios adicionales.
+    Incluye:
+    IDunico: number, 
+    IDdoctor: number, 
+    fecha disponible: date, 
+    hora disponible: date,
+    estado: string,
+    comentarios: string.
+        **TABLA**
+        availabilityDate (
+        id_availability_date INT AUTO_INCREMENT PRIMARY KEY,
+        id_doctor INT,
+        availability_date DATE NOT NULL,
+        availability_time_from TIME NOT NULL,
+        availability_time_to TIME NOT NULL,
+        status ENUM('Available', 'Booked', 'Cancelled') DEFAULT 'Available',
+        comment VARCHAR(255)
+        )
 
 5. **Historias Médicas:**
-    Cada historial médico tiene un ID único, paciente asociado, médico a cargo, fecha de concurrencia, detalles de la visita, diagnóstico y tratamiento.
+    Cada historial médico tiene un:
+    IDúnico: number,  
+    IDpaciente: number, 
+    IDmédico: number,  
+    fecha de concurrencia: date, 
+    detalles de la visita: string, 
+    diagnóstico: string,
+    tratamiento: string.
+        **TABLA**
+        medical_history (
+        id_history INT AUTO_INCREMENT PRIMARY KEY,
+        id_patient INT,
+        id_doctor INT,
+        concurrence_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        details TEXT,
+        diagnosis TEXT,
+        treatment TEXT
+        )
 
 6. **Terapias:**
-    Las terapias están asociadas a un paciente y un médico.
-    Cada terapia incluye una fecha de sesión, detalles de la sesión, progreso y observaciones.
+    Las terapias están asociadas A:
+    IDunico: number,
+    IDpaciente: number, 
+    IDmédico: number,
+    fecha de sesión: date, 
+    detalles de la sesión: string, 
+    progreso: string,
+    observaciones: string.
+        **TABLA**
+        therapy(
+        id_session BINARY(16) PRIMARY KEY DEFAULT (UUID_TO_BIN(UUID())),
+        id_patient INT,
+        id_doctor INT,
+        session_date DATE,
+        details TEXT,
+        progress TEXT,
+        obs TEXT
+        )
 
 ## Objetivo
 El objetivo principal es crear una base de datos que permita a un centro médico gestionar de manera efectiva la información de pacientes, médicos, citas, historias médicas y terapias. Esta base de datos debe ser fácil de mantener, escalable y garantizar la integridad de los datos, permitiendo así una gestión ágil y precisa de todas las operaciones médicas.
