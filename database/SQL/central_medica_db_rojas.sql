@@ -226,6 +226,7 @@ VALUES
 (1,5,'2024/05/15','15:00:00','16:00:00','Booked','comentario'),
 (2,5,'2024/05/15','16:00:00','17:00:00','Available','comentario'),
 (3,5,'2024/05/15','17:00:00','18:00:00','Available','comentario');
+
    
    
 INSERT INTO medical_history (
@@ -260,7 +261,7 @@ VALUES
 
 
 
--- VIEWS
+-- >>>>>>>>>>>>>>>>>>>>>> VIEWS <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 -- VISTAS CITAS POR ESTADO
 CREATE VIEW citas_por_estado AS
 SELECT status, COUNT(*) AS cantidad_citas
@@ -302,5 +303,97 @@ SELECT d.speciality, mh.diagnosis, COUNT(*) AS cantidad_diagnosticos
 FROM doctors d
 JOIN medical_history mh ON d.id_doctor = mh.id_doctor
 GROUP BY d.speciality, mh.diagnosis;
-
 SELECT * FROM  frecuencia_diagnosticos;
+
+
+-- >>>>>>>>>>>>>>>>>>>>>> FUNCTIONS <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+-- AGREGAR HORARIOS
+DELIMITER //
+
+CREATE FUNCTION AddAvailableDays(
+    p_id_doctor INT,
+    p_start_date DATE,
+    p_end_date DATE,
+    p_interval INT
+)
+RETURNS VARCHAR(255)
+DETERMINISTIC
+READS SQL DATA
+BEGIN
+    DECLARE i INT DEFAULT 0;
+    DECLARE temp_date DATE;
+    DECLARE message VARCHAR(255);
+
+    SET temp_date = p_start_date;
+
+    WHILE temp_date <= p_end_date DO
+        INSERT INTO availabilityDate (id_doctor, availability_date, availability_time_from, availability_time_to, status)
+        VALUES (p_id_doctor, temp_date, '08:00:00', '17:00:00', 'Available');
+        
+        SET temp_date = DATE_ADD(p_start_date, INTERVAL i DAY);
+        SET i = i + p_interval;
+    END WHILE;
+
+    SET message = CONCAT('Days added successfully for doctor ', CAST(p_id_doctor AS CHAR), ' from ', p_start_date, ' to ', p_end_date, ' with interval ', CAST(p_interval AS CHAR), ' days.');
+    RETURN message;
+END //
+
+DELIMITER ;
+
+
+-- CALL FUNCTIONS
+SELECT AddAvailableDays(1, '2024-04-20', '2024-04-30', 2) AS message;
+
+SELECT
+* FROM CENTRALMEDICAL_DB.AVAILABILITYDATE;
+
+
+
+
+-- >>>>>>>>>>>>>>>>>>>>>> STORED PROCEDURES <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+DELIMITER //
+
+CREATE PROCEDURE ScheduleAppointment(
+    IN p_id_doctor INT,
+    IN p_appointment_date DATE,
+    IN p_appointment_time TIME,
+    IN p_id_patient INT
+)
+BEGIN
+    DECLARE availability_count INT;
+
+    -- paso1 Verifica la disponibilidad del doctor en la fecha y hora especificadas
+    SELECT COUNT(*) INTO availability_count
+    FROM availabilityDate
+    WHERE id_doctor = p_id_doctor
+        AND availability_date = p_appointment_date
+        AND availability_time_from <= p_appointment_time
+        AND availability_time_to > p_appointment_time
+        AND status = 'Available';
+
+    IF availability_count > 0 THEN
+        -- paso2 Inserta la cita 
+        INSERT INTO appointments (id_patient, id_doctor, appointment_date, appointment_time, status)
+        VALUES (p_id_patient, p_id_doctor, p_appointment_date, p_appointment_time, 'Confirmed');
+
+        -- paso3 Actualiza estado de disponibilidad en la tabla de disponibilidad
+        UPDATE availabilityDate
+        SET status = 'Booked'
+        WHERE id_doctor = p_id_doctor
+            AND availability_date = p_appointment_date
+            AND availability_time_from <= p_appointment_time
+            AND availability_time_to > p_appointment_time;
+
+        SELECT 'Appointment scheduled successfully.' AS message;
+    ELSE
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Doctor not available at the specified date and time.';
+    END IF;
+END //
+
+DELIMITER ;
+
+-- paso4 Call procedure
+CALL ScheduleAppointment(1, '2024-04-24', '10:00:00', 1);
+
+
