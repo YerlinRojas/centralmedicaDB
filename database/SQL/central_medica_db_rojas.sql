@@ -146,7 +146,7 @@ REFERENCES medical_history(id_history);
 
 -- INSERT
 
-/*INSERT INTO patients(
+INSERT INTO patients(
 	id_patient,
     first_name,
     last_name,
@@ -156,7 +156,7 @@ REFERENCES medical_history(id_history);
     address,
     phone)
     VALUES 
-
+(1, 'Sutton', 'Folds', 'sfoldsj@nba.com', '1990/04/28', 'Male', '29 Homewood Lane', '537-577-9584'),
 (2, 'Antonius', 'Marns', 'amarns1@cnet.com', '2021/03/17', 'Male', '35492 Marquette Street', '220-680-8900'),
 (3, 'Luca', 'Mordue', 'lmordue2@theglobeandmail.com', '1976/02/05', 'Male', '77 Thierer Pass', '170-343-3205'),
 (4, 'Pegeen', 'Shucksmith', 'pshucksmith3@csmonitor.com', '2003/07/28', 'Female', '56 Thackeray Way', '738-570-6313'),
@@ -174,8 +174,8 @@ REFERENCES medical_history(id_history);
 (16, 'Oriana', 'Strete', 'ostretef@drupal.org', '1936/12/21', 'Female', '58914 Sachtjen Road', '415-624-2823'),
 (17, 'Iolanthe', 'Keigher', 'ikeigherg@pinterest.com', '1966/05/26', 'Female', '6 Chive Alley', '302-540-6313'),
 (18, 'Tymothy', 'Bellino', 'tbellinoh@acquirethisname.com', '1952/06/24', 'Male', '685 Schurz Street', '696-518-4446'),
-(19, 'Edin', 'Ors', 'eorsi@prlog.org', '1974/06/14', 'Female', '6 Hauk Point', '453-329-8781'),
-(20, 'Sutton', 'Folds', 'sfoldsj@nba.com', '1990/04/28', 'Male', '29 Homewood Lane', '537-577-9584');
+(19, 'Edin', 'Ors', 'eorsi@prlog.org', '1974/06/14', 'Female', '6 Hauk Point', '453-329-8781');
+
 
 
 
@@ -194,7 +194,7 @@ VALUES
 (3, 'Lorine', 'MacGettigen', 'lmacgettigen2@creativecommons.org', 'psychologist', '730-195-5586', 3),
 (4, 'Radcliffe', 'Willshere', 'rwillshere3@xing.com', 'psychologist','757-848-1622', 4),
 (5, 'Patsy', 'Surgison', 'psurgison4@angelfire.com','pulmonologist', '613-984-3535', 5),
-(6, 'Ardath', 'Fernandes', 'afernandes5@freewebs.com','psychologist', '922-820-8737', 6);*/
+(6, 'Ardath', 'Fernandes', 'afernandes5@freewebs.com','psychologist', '922-820-8737', 6);
 
 
 INSERT INTO appointments(
@@ -308,6 +308,7 @@ SELECT * FROM  frecuencia_diagnosticos;
 
 -- >>>>>>>>>>>>>>>>>>>>>> FUNCTIONS <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 -- AGREGAR HORARIOS
+DROP FUNCTION IF EXISTS AddAvailableDays;
 DELIMITER //
 
 CREATE FUNCTION AddAvailableDays(
@@ -351,6 +352,7 @@ SELECT
 
 
 -- >>>>>>>>>>>>>>>>>>>>>> STORED PROCEDURES <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+DROP PROCEDURE IF EXISTS ScheduleAppointment;
 DELIMITER //
 
 CREATE PROCEDURE ScheduleAppointment(
@@ -395,5 +397,10 @@ DELIMITER ;
 
 -- paso4 Call procedure
 CALL ScheduleAppointment(1, '2024-04-24', '10:00:00', 1);
+
+
+
+-- >>>>>>>>>>>>>>>>>>>>>> TRIGGERS <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
 
 
