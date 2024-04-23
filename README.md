@@ -144,3 +144,114 @@ El objetivo principal es crear una base de datos que permita a un centro médico
 ## Diagrama Entidad Relación
 
 ![diagrama entidad relacion](./public/images/DiagramaEntidadRelacion.png)
+
+
+## Documentación de Vistas de Base de Datos
+**Vista: citas_por_estado**
+· Descripción: Esta vista muestra la cantidad de citas agrupadas por estado en la tabla de citas.
+· Columnas:
+ · status: Estado de la cita.
+ · cantidad_citas: Cantidad de citas con ese estado.
+
+**Ejemplo de consulta:**
+SELECT * FROM citas_por_estado;
+
+**Vista: historial_medico_por_paciente**
+· Descripción: Muestra el historial médico de los pacientes, incluyendo detalles, diagnósticos y tratamientos.
+· Columnas:
+ · first_name: Nombre del paciente.
+ · last_name: Apellido del paciente.
+ · details: Detalles del historial médico.
+ · diagnosis: Diagnóstico del historial médico.
+ · treatment: Tratamiento del historial médico.
+
+**Ejemplo de consulta:**
+SELECT * FROM historial_medico_por_paciente;
+
+**Vista: sesiones_terapia_por_paciente**
+· Descripción: Proporciona información sobre las sesiones de terapia de los pacientes, incluyendo detalles, progreso y observaciones.
+· Columnas:
+ · first_name: Nombre del paciente.
+ · last_name: Apellido del paciente.
+ · details: Detalles de la sesión de terapia.
+ · progress: Progreso de la sesión de terapia.
+ · obs: Observaciones de la sesión de terapia.
+
+**Ejemplo de consulta:**
+SELECT * FROM sesiones_terapia_por_paciente;
+
+**Vista: disponibilidad_doctores**
+· Descripción: Muestra la disponibilidad de los doctores en diferentes fechas y horarios.
+· Columnas:
+ · first_name: Nombre del doctor.
+ · last_name: Apellido del doctor.
+ · availability_date: Fecha de disponibilidad.
+ · availability_time_from: Hora de inicio de disponibilidad.
+ · availability_time_to: Hora de fin de disponibilidad.
+
+ **Ejemplo de consulta:**
+SELECT * FROM disponibilidad_doctores;
+
+**Vista: frecuencia_diagnosticos**
+· Descripción: Proporciona estadísticas sobre la frecuencia de diagnósticos realizados por especialidad de doctor.
+· Columnas:
+ · speciality: Especialidad del doctor.
+ · diagnosis: Diagnóstico realizado.
+ · cantidad_diagnosticos: Cantidad de veces que se realizó ese diagnóstico para esa especialidad.
+
+**Ejemplo de consulta:**
+SELECT * FROM frecuencia_diagnosticos;
+
+## Documentación de Funciones
+
+**Función: CalculateTotalTherapyHoursByPatient**
+· Descripción: calcula la cantidad total de horas de terapia que ha tenido un paciente específico y devuelve este valor en un formato legible con unidades de horas.
+
+· Parámetros de entrada:
+ · p_id_patient
+
+· Retorno: 
+ · VARCHAR(20) . Cantidad total de horas en terapia.
+
+**Función: CalculateTotalAppointmentHoursByPatient**
+· Descripción: calcula la cantidad total de horas de las citas confirmadas que ha tenido un paciente específico y devuelve este valor en un formato legible con unidades de horas.
+
+· Parámetros de entrada:
+ · p_id_patient
+
+· Retorno: 
+ · VARCHAR(20) . Cantidad total de horas de las citas confirmadas.
+
+**Función: AddAvailableDays**
+· Descripción: permite agregar días disponibles en la tabla availabilityDate para un doctor específico en un rango de fechas determinado, con un intervalo de días establecido.
+
+· Parámetros de entrada:
+ · p_id_doctor
+ · p_start_date
+ · p_end_date
+ · p_interval
+
+· Retorno:
+ · VARCHAR(20) . Horarios disponiles de los doctores 
+
+## Documentación de Procedimientos Almacenados
+
+**Procedimiento: ScheduleAppointment**
+
+· Descripción: El procedimiento almacenado ScheduleAppointment se encarga de programar una cita verificando la disponibilidad del doctor en la fecha y hora especificadas, y luego actualiza el estado de la cita y la disponibilidad en la base de datos.
+
+· Parámetros:
+   · p_id_doctor INT,
+   · p_appointment_date DATE,
+   · p_appointment_time TIME,
+   · p_start_hour TIME,
+   · p_end_hour TIME,
+   · p_id_patient INT
+
+· Retorno:
+   · Mensaje de éxito o error
+
+· Ejemplo de uso:
+CALL ScheduleAppointment(1, '2024-04-24', '10:00:00', '09:30:00', '11:00:00', 1);
+
+
