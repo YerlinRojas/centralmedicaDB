@@ -1,4 +1,6 @@
 -- >>>>>>>>>>>>>>>>>>>>>> STORED PROCEDURES <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+-- PROGAMAR CITAS EN LA TABLA APPOIMENTS
 DROP PROCEDURE IF EXISTS ScheduleAppointment;
 DELIMITER //
 
@@ -42,5 +44,50 @@ END //
 DELIMITER ;
 
 -- CALL
-CALL ScheduleAppointment(1, '2024-04-24', '10:00:00', '09:30:00', '11:00:00', 1);
+-- OK
+CALL ScheduleAppointment(3, '2024-04-20', '08:00:00', '08:00:00', '09:00:00', 1);
+CALL ScheduleAppointment(3, '2024-04-20', '09:00:00', '09:00:00', '10:00:00', 2);
+CALL ScheduleAppointment(3, '2024-04-20', '10:00:00', '10:00:00', '11:00:00', 3);
+CALL ScheduleAppointment(3, '2024-04-20', '11:00:00', '11:00:00', '12:00:00', 4);
+CALL ScheduleAppointment(3, '2024-04-20', '12:00:00', '12:00:00', '17:00:00', 5);
+
+
+-- TABLAS
+SELECT * FROM CENTRALMEDICAL_DB.AVAILABILITYDATE;
+SELECT * FROM CENTRALMEDICAL_DB.APPOINTMENTS;
+
+
+
+
+
+-- ELIMINA SOLO CITAS CONFIRMADAS DE TABLA APPOINTMENTS
+DELIMITER //
+
+CREATE PROCEDURE DeleteAppointmentIfConfirmed(
+    IN p_appointment_id INT
+)
+BEGIN
+    DECLARE appointment_status ENUM('Pending', 'Confirmed', 'Cancelled', 'Completed');
+    
+    
+    SELECT status INTO appointment_status
+    FROM appointments
+    WHERE id_appointment = p_appointment_id;
+
+    
+    IF appointment_status = 'Confirmed' THEN
+        
+        DELETE FROM appointments
+        WHERE id_appointment = p_appointment_id;
+    ELSE
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'No se puede eliminar una cita que no esté confirmada.';
+    END IF;
+END //
+
+DELIMITER ;
+
+-- CALL
+CALL DeleteAppointmentIfConfirmed(10);
+
 
