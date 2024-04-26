@@ -151,9 +151,6 @@ FOREIGN KEY (id_history)
 REFERENCES medical_history(id_history);
 
 
-UPDATE therapy
-SET start_time = '09:00:00', end_time = '10:00:00'
-WHERE id_session = 'your_session_id';
 
 
 

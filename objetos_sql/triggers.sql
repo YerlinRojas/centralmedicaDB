@@ -1,7 +1,7 @@
 
 -- >>>>>>>>>>>>>>>>>>>>>> TRIGGERS <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
--- VERIFICA SI EL EMAIL YA SE ENCUENTRA REGISTRADO Y LANZA UN ERROR 
+-- VERIFICA SI EL EMAIL YA SE ENCUENTRA REGISTRADO RETORNA ERROR 
 DROP TRIGGER IF EXISTS before_insert_patient_email_check;
 DELIMITER //
 
@@ -36,7 +36,7 @@ FOR EACH ROW
 BEGIN
     DECLARE appointment_status ENUM('Pending', 'Confirmed', 'Cancelled', 'Completed');
     
-    -- Obtener el estado de la cita que se va a eliminar
+    
     SELECT status INTO appointment_status
     FROM appointments
     WHERE id_appointment = OLD.id_appointment;

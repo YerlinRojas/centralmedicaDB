@@ -145,6 +145,28 @@ El objetivo principal es crear una base de datos que permita a un centro médico
 
 ![diagrama entidad relacion](./public/images/DiagramaEntidadRelacion.png)
 
+## Population ##
+
+**For Windows CMD**
+(Requisitos 
+    Tener mysql como variable de entorno
+    El archivo csv debe estar alojado en la carpeta Uploads de Mysql
+    Por lo general la carpeta se encuentra en la siguiente ruta:
+    C:\ProgramData\MySQL\MySQL Server 8.0\Uploads)
+
+1 Abrir CDM(teclas: windows+R, enter)
+2 Escribir mysql ( de esta manera levanta el servidor de mysql)
+3 Escribir mysql -u root -p --host 127.0.0.1 --port 3306 --local-infile=1 
+4 Introducir password
+5 SHOW GLOBAL VARIABLES LIKE 'local_infile'
+6 El cuadro que retorna , local_infile debe estar en ON
+7 En caso de que este en OFF , escribir 
+    SET GLOBAL local_infile - 'ON'
+8 Volver a mostrar las variables escribiendo
+    SHOW GLOBAL VARIABLES LIKE 'local_infile' (esta debe estar en ON)
+9 Para insertar data en el CMD de Windows escribir:
+    load data infile 'C:\\ProgramData\\MySQL server 8.0\\Uploads\\TU_NOMBRE_DE_ARCHIVO.csv' into table TU_DB.TU_TABLA_A_INSERTAR_DATOS fields terminated by ',' lines terminated by '\n' ignore 1 rows;
+
 
 ## Documentación de Vistas de Base de Datos
 **Vista: citas_por_estado**
@@ -203,7 +225,6 @@ SELECT * FROM disponibilidad_doctores;
 SELECT * FROM frecuencia_diagnosticos;
 
 ## Documentación de Funciones
-
 **Función: CalculateTotalTherapyHoursByPatient**
 · Descripción: calcula la cantidad total de horas de terapia que ha tenido un paciente específico y devuelve este valor en un formato legible con unidades de horas.
 
@@ -235,7 +256,6 @@ SELECT * FROM frecuencia_diagnosticos;
  · VARCHAR(20) . Horarios disponiles de los doctores 
 
 ## Documentación de Procedimientos Almacenados
-
 **Procedimiento: ScheduleAppointment**
 
 · Descripción: El procedimiento almacenado ScheduleAppointment se encarga de programar una cita verificando la disponibilidad del doctor en la fecha y hora especificadas, y luego actualiza el estado de la cita y la disponibilidad en la base de datos.
@@ -253,5 +273,36 @@ SELECT * FROM frecuencia_diagnosticos;
 
 · Ejemplo de uso:
 CALL ScheduleAppointment(1, '2024-04-24', '10:00:00', '09:30:00', '11:00:00', 1);
+
+
+## Documentación de Triggers
+**Trigger: before_insert_patient_email_check**
+
+· Descripción: Este trigger se activa antes de insertar un nuevo paciente en la tabla de pacientes. Su función es verificar si el correo electrónico del nuevo paciente ya está registrado en la base de datos. Si se encuentra un paciente con el mismo correo electrónico, el trigger devuelve un error, impidiendo la inserción del nuevo paciente con el mismo correo electrónico.
+
+· Detalles:
+
+ · Tabla afectada: PATIENTS
+ · Acción: INSERT
+ · Información registrada: Email
+
+· Ejemplo:
+
+ · Se inserta un nuevo email.
+ · El trigger verifica si existe o no el email, pasa a registrarse en patiens cuando no se encuentra registrado.
+
+**Trigger: UpdateAvailabilityOnDeleteAppointment**
+
+· Descripción: Este trigger se activa antes de eliminar una cita de la tabla "appointments". Su propósito es actualizar el estado de disponibilidad en la tabla "availabilityDate" si la cita que se está eliminando estaba previamente confirmada.
+
+· Detalles:
+
+ · Tabla afectada: AVAILABILITYDATE
+ · Acción: DELETE
+ · Información registrada: Estado de la cita
+
+· Ejemplo:
+     · Se elimina una cita confirmada.
+     · El trigger cambia el estado de disponibilidad correspondiente en la tabla "availabilityDate" de vuelta a "Disponible", permitiendo que ese intervalo de tiempo esté disponible nuevamente para futuras citas.
 
 

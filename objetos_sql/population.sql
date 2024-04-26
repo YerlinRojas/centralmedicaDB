@@ -1,5 +1,5 @@
 
--- INSERT
+-- POPULATION
 
 INSERT INTO patients(
 	id_patient,
@@ -112,3 +112,5 @@ VALUES
 ('4', 2, 1, '2024-04-20', '09:30:00', '10:30:00', 'Detalles de la sesión', 'Progreso de la sesión', 'Observaciones de la sesión'),
 ('5', 3, 1, '2024-04-10', '10:30:00', '11:30:00', 'Detalles de la sesión', 'Progreso de la sesión', 'Observaciones de la sesión')
 ;
+
+
