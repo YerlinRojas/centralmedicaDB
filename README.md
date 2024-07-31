@@ -1,3 +1,4 @@
+Note: This project does not contain a Makefile for testing through Codespaces
 # Documentación
 
 # Desafío de Diseño: Sistema de Gestión Medica 👩🏽‍⚕️💻
